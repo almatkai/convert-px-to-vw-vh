@@ -1,0 +1,124 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "convert-px-to-vw-vh",
+  "title": "Pixels to Viewport Width or Height",
+  "description": "Fast conversion of pixels to vw or vh depending on the size of your viewport.",
+  "icon": "logo.png",
+  "author": "almatkai",
+  "categories": [
+    "Developer Tools",
+    "Design Tools",
+    "Web",
+    "Productivity"
+  ],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "index",
+      "title": "Convert PX to VW or VH",
+      "description": "All commands in one place for easy convertion",
+      "mode": "view",
+      "platforms": [
+        "macOS",
+        "Windows"
+      ]
+    },
+    {
+      "name": "height",
+      "title": "Pixels Viewport Height",
+      "description": "Pixels to viewport height",
+      "icon": "logo-vh.png",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "height",
+          "placeholder": "height",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "pixels",
+          "placeholder": "pixels",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "platforms": [
+        "macOS",
+        "Windows"
+      ]
+    },
+    {
+      "name": "width",
+      "title": "Pixels Viewport Width",
+      "description": "Pixels to viewport width",
+      "icon": "logo-vw.png",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "width",
+          "placeholder": "width",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "pixels",
+          "placeholder": "pixels",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "platforms": [
+        "macOS",
+        "Windows"
+      ]
+    },
+    {
+      "name": "menu-bar",
+      "title": "Conversion History",
+      "description": "History of your last conversions",
+      "icon": "logo.png",
+      "mode": "menu-bar",
+      "platforms": [
+        "macOS",
+        "Windows"
+      ]
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.104.1",
+    "@raycast/utils": "^2.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsx": "^4.22.4",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "id": "com.tezbar.convert-px-to-vw-vh",
+  "platforms": [
+    "macOS",
+    "Windows"
+  ],
+  "version": "0.1.0",
+  "tezbar": {
+    "schemaVersion": 1,
+    "platforms": [
+      "macos",
+      "windows"
+    ],
+    "linuxStatus": "coming-soon",
+    "repository": "https://github.com/almatkai/convert-px-to-vw-vh",
+    "upstream": {
+      "repository": "https://github.com/raycast/extensions",
+      "path": "extensions/convert-px-to-vw-vh",
+      "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a"
+    }
+  }
+}

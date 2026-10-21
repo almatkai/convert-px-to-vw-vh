@@ -3,7 +3,7 @@
   "name": "convert-px-to-vw-vh",
   "title": "Pixels to Viewport Width or Height",
   "description": "Fast conversion of pixels to vw or vh depending on the size of your viewport.",
-  "icon": "logo.png",
+  "icon": "assets/logo.png",
   "author": "almatkai",
   "categories": [
     "Developer Tools",
@@ -27,7 +27,7 @@
       "name": "height",
       "title": "Pixels Viewport Height",
       "description": "Pixels to viewport height",
-      "icon": "logo-vh.png",
+      "icon": "assets/logo-vh.png",
       "mode": "no-view",
       "arguments": [
         {
@@ -52,7 +52,7 @@
       "name": "width",
       "title": "Pixels Viewport Width",
       "description": "Pixels to viewport width",
-      "icon": "logo-vw.png",
+      "icon": "assets/logo-vw.png",
       "mode": "no-view",
       "arguments": [
         {
@@ -77,7 +77,7 @@
       "name": "menu-bar",
       "title": "Conversion History",
       "description": "History of your last conversions",
-      "icon": "logo.png",
+      "icon": "assets/logo.png",
       "mode": "menu-bar",
       "platforms": [
         "macOS",

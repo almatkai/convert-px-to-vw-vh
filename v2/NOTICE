@@ -1,0 +1,16 @@
+Pixels to Viewport Width or Height — Tezbar Native V2
+
+Original extension by Atiipik, as credited in the pinned Raycast package manifest.
+Source: raycast/extensions, commit 6734d85992290066fd31a7f5bee3cca3d3545a1a,
+extensions/convert-px-to-vw-vh. Original source, presets and PNG icons are covered
+by the repository's MIT license (Copyright (c) 2021 Raycast), reproduced verbatim
+in LICENSE-MIT. Native implementation and test tooling: Copyright (c) 2026
+almatkai, MIT; the same permission and warranty terms apply.
+
+Tezbar beta contract fixtures are reproduced byte-for-byte from commit
+fd300e276356587726566026f072563eb9c34cb1. They are licensed under Apache-2.0;
+the complete license is in LICENSE-APACHE-2.0. The fixtures have not been modified.
+The test-only Tauri OS boundary shim is a new MIT implementation, not Tauri code.
+
+Package SPDX expression: MIT AND Apache-2.0. Each component retains its own
+license; the combined package includes both sets of notices and terms.

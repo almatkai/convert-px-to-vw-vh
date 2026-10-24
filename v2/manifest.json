@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 2,
+  "id": "com.tezbar.native.convert-px-to-vw-vh",
+  "slug": "convert-px-to-vw-vh",
+  "name": "Pixels to Viewport Width or Height",
+  "version": "0.1.0",
+  "description": "Fast conversion of pixels to vw or vh depending on the size of your viewport. Original Raycast extension by Atiipik (MIT); Tezbar Native V2 adaptation.",
+  "icon": "/extensions/icons/convert-px-to-vw-vh.png",
+  "runtime": "rust",
+  "replaces": [
+    "raycast.convert-px-to-vw-vh"
+  ],
+  "platforms": [
+    "macOS",
+    "Windows"
+  ],
+  "commands": [
+    {
+      "name": "index",
+      "title": "Convert PX to VW or VH",
+      "description": "All commands in one place for easy convertion",
+      "mode": "view",
+      "platforms": [
+        "macOS",
+        "Windows"
+      ],
+      "runtime": "rust"
+    },
+    {
+      "name": "height",
+      "title": "Pixels Viewport Height",
+      "description": "Pixels to viewport height",
+      "icon": "/extensions/icons/convert-px-to-vw-vh-vh.png",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "height",
+          "placeholder": "height",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "pixels",
+          "placeholder": "pixels",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "platforms": [
+        "macOS",
+        "Windows"
+      ],
+      "runtime": "rust"
+    },
+    {
+      "name": "width",
+      "title": "Pixels Viewport Width",
+      "description": "Pixels to viewport width",
+      "icon": "/extensions/icons/convert-px-to-vw-vh-vw.png",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "width",
+          "placeholder": "width",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "pixels",
+          "placeholder": "pixels",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "platforms": [
+        "macOS",
+        "Windows"
+      ],
+      "runtime": "rust"
+    },
+    {
+      "name": "menu-bar",
+      "title": "Conversion History",
+      "description": "History of your last conversions (Native V2 List adaptation; no menu-bar popup)",
+      "icon": "/extensions/icons/convert-px-to-vw-vh.png",
+      "mode": "view",
+      "platforms": [
+        "macOS",
+        "Windows"
+      ],
+      "runtime": "rust"
+    }
+  ],
+  "verification": [
+    {
+      "platform": "macOS",
+      "state": "not-run",
+      "note": "Compiled contract checks only; real desktop QA has not run."
+    },
+    {
+      "platform": "Windows",
+      "state": "not-run",
+      "note": "Compiled contract checks only; real desktop QA has not run."
+    }
+  ]
+}

@@ -46,3 +46,5 @@ This project is licensed under the MIT License. Please see the [LICENSE](LICENSE
 ---
 
 **Note:** This extension was developed by Atiipik and ThoPel.
+
+[Tezbar Native V2 Rust implementation](v2/README.md)

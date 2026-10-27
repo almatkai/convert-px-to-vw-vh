@@ -1,0 +1,23 @@
+[package]
+name = "tezbar-convert-px-to-vw-vh"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+description = "Compiled-in Native V2 pixels to viewport conversion for Tezbar"
+repository = "https://github.com/almatkai/convert-px-to-vw-vh"
+license = "MIT AND Apache-2.0"
+include = ["src/**", "tests/**", "scripts/**", "icons/**", "Cargo.toml", "Cargo.lock", "README.md", "LICENSE-*", "NOTICE", "manifest.json", "provenance.json"]
+
+[dependencies]
+num-bigint = "=0.4.6"
+num-traits = "=0.2.19"
+ryu-js = "=1.0.2"
+serde = { version = "=1.0.228", features = ["derive"] }
+serde_json = "=1.0.145"
+
+time = { version = "=0.3.36", features = ["formatting", "parsing"] }
+
+[dev-dependencies]
+log = "=0.4.28"
+tempfile = "=3.15.0"
+tokio = { version = "=1.48.0", features = ["rt-multi-thread", "macros", "sync"] }

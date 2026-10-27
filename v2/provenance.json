@@ -1,0 +1,170 @@
+[
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "src-tauri/src/native_core/common.rs",
+    "local": "tests/fixtures/beta/common.rs",
+    "sha256": "280a0a2f0dd04a8570b320aafc0c3ece0f5de8ddb21c363645567d6a35d84da7"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "src-tauri/src/native_core/extensions/v2_sdk.rs",
+    "local": "tests/fixtures/beta/v2_sdk.rs",
+    "sha256": "4f987346f863db9a7bd6aa1d5a99e149925dc69a44d629727ccc80a567cd27c2"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "schemas/extension-v2.schema.json",
+    "local": "tests/fixtures/beta/extension-v2.schema.json",
+    "sha256": "6d5afda1b652605982104bdf16d1547547b98dfd707a7b2969316406c49f32af"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "docs/NATIVE_V2_FORMAT.md",
+    "local": "tests/fixtures/beta/NATIVE_V2_FORMAT.md",
+    "sha256": "8bf9315ad047326dd6737587ca5491fc35faf5e3f92a2d9c63f596be0c8f7b7a"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "src-tauri/src/native_core/extensions/v2_runtime.rs",
+    "local": "tests/fixtures/beta/v2_runtime.rs",
+    "sha256": "df96675ba916a3d70b8e0e5da76f7a9422d238cc3fbe3a5a6178fef21662a6a0"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "src-tauri/src/native_core/extensions/v2_amphetamine.rs",
+    "local": "tests/fixtures/beta/v2_amphetamine.rs",
+    "sha256": "c54ead77b5691cd0f4ead4826e45d8b5de5d486c6ba382b765ca4ea040c2a0c7"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "src-tauri/src/native_core/platform.rs",
+    "local": "tests/fixtures/beta/platform.rs",
+    "sha256": "75fa7ce4204edbbdb0f4a5410895b32239939b707256c484dc3c4f9de390b5a1"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "src/renderer/src/raycast-api/form-runtime.tsx",
+    "local": "tests/fixtures/beta/form-runtime.tsx",
+    "sha256": "8568d0ac5be03eea97d0def38067dbbbdce5ae97c36a51024857ef20dce299a6"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "src/renderer/src/raycast-api/list-runtime.tsx",
+    "local": "tests/fixtures/beta/list-runtime.tsx",
+    "sha256": "c7e253c34ce6e0a5132cab96bf1f0388393faca79ff57c3fdc7956f377a0ab0f"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "src/renderer/src/raycast-api/index.tsx",
+    "local": "tests/fixtures/beta/index.tsx",
+    "sha256": "7fc8413a72b92e8f88b0939cd93f91624018fe0765baa1e71b38b86f8cc77a64"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "LICENSE",
+    "local": "tests/fixtures/beta/LICENSE",
+    "sha256": "0ed6b1b2760294d4aaaa45be38e166fcc0168e1dd5190423c096fcbe1c94afbf"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/src/height.tsx",
+    "local": "tests/fixtures/upstream/height.tsx",
+    "sha256": "d9e08fd6e87c6d673ed5c940e125b9a57a2d5cfb8f68b665032fecc4c6ebfd56"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/src/width.tsx",
+    "local": "tests/fixtures/upstream/width.tsx",
+    "sha256": "2424d5510a295e7d5521c1cd8426e9591322978a757e73234629c5102ad913b1"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/src/index.tsx",
+    "local": "tests/fixtures/upstream/index.tsx",
+    "sha256": "21522e2eab65e9bf7e93212d430306a43e535b7321109d5dfe39483ea56f93de"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/src/menu-bar.tsx",
+    "local": "tests/fixtures/upstream/menu-bar.tsx",
+    "sha256": "d4641545173de0cab2bb4273cf2e44365b4fa85275deb6c04ca66f3f477301ee"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/src/history.ts",
+    "local": "tests/fixtures/upstream/history.ts",
+    "sha256": "f7d0da1bf6f8807bb23823ab322e1ebc0ef8805b33b01a00be87943e0ab909eb"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/src/types.ts",
+    "local": "tests/fixtures/upstream/types.ts",
+    "sha256": "9d2bcd2550728ddbb3100a06f119826bf11562efc71ad4101022a56ca10e6359"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/src/utils.ts",
+    "local": "tests/fixtures/upstream/utils.ts",
+    "sha256": "d596f3d1fc05db99fa7e0550bf9e0d9526821fca9f29db4472572cb3b99f0d27"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/package.json",
+    "local": "tests/fixtures/upstream/package.json",
+    "sha256": "761b8878e0cb6c26c4860ff00a4a110ebc52e8ea2e833d5b2af47919bcead533"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/assets/logo.png",
+    "local": "icons/logo.png",
+    "sha256": "8fbce00428eac4cae1c1294f10de6b7ff829b5e57c5e4cb63ca3b72c303300bd"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/assets/logo-vh.png",
+    "local": "icons/logo-vh.png",
+    "sha256": "6d88d7027fbc863cb0d8032c1aa1143274a55e4ae09251d3532214c3d86172db"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "extensions/convert-px-to-vw-vh/assets/logo-vw.png",
+    "local": "icons/logo-vw.png",
+    "sha256": "ca37b3cb68c58297b3ed50597e496688638fcbc88d397930db003362049bd978"
+  },
+  {
+    "origin": "upstream",
+    "commit": "6734d85992290066fd31a7f5bee3cca3d3545a1a",
+    "path": "LICENSE",
+    "local": "tests/fixtures/upstream/LICENSE",
+    "sha256": "7f727f8b20cdd0e65f84e70b9cac2fce337dcecee4dc88955eb012ea27f02755"
+  },
+  {
+    "origin": "beta",
+    "commit": "fd300e276356587726566026f072563eb9c34cb1",
+    "path": "src/main/extension-runner.ts",
+    "local": "tests/fixtures/beta/extension-runner.ts",
+    "sha256": "16bfc8a0393bd6378b4c06a19082daa46eb4b26cfe2ae78492ad3dd074e24744"
+  }
+]

@@ -1,0 +1,22 @@
+Pixels to Viewport Width or Height — standalone Rust Tezbar process extension
+
+Original Raycast extension "convert-px-to-vw-vh" by Atiipik, from
+raycast/extensions commit 6734d85992290066fd31a7f5bee3cca3d3545a1a,
+path extensions/convert-px-to-vw-vh. The original source, device presets and
+PNG icons (resources/assets/*.png, byte-identical to the original) are covered
+by the MIT license, Copyright (c) 2021 Raycast, reproduced verbatim in
+licenses/raycast-extensions-MIT.txt.
+
+Rust conversion engine, adapter and packaging: Copyright (c) 2026 almatkai,
+MIT (see LICENSE).
+
+The executable statically links the Tezbar Rust extension SDK
+(https://github.com/almatkai/tezbar-extension-sdk-rust, revision
+aaec571673ab64a85a136cf6bd054ef660c4d93c), Apache-2.0. Its license and NOTICE
+are reproduced in licenses/tezbar-extension-sdk-Apache-2.0.txt and
+licenses/tezbar-extension-sdk-NOTICE.txt. Other statically linked Rust crates
+(serde, serde_json, tokio, uuid, tempfile, time, num-bigint, num-traits,
+ryu-js and their dependencies) are distributed under MIT or Apache-2.0 terms
+as recorded in Cargo.lock.
+
+Package SPDX expression: MIT AND Apache-2.0.

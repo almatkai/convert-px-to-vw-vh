@@ -1,11 +1,8 @@
-//! Standalone schema-3 process executable (protocol 1) for Pixels to Viewport
-//! Width or Height. The reviewed Native V2 adapter (`v2/src/tezbar_adapter.rs`)
-//! is compiled here byte-for-byte unchanged. Its `crate::native_core` imports
-//! resolve to the independent SDK through the narrow shim below, so the only
-//! host services it can reach are typed `host.clipboard.write` and
-//! `host.window.visibility {visible:false}` reverse RPCs, both gated by the
-//! manifest grants. Storage is the SDK's package-private atomic store.
+//! Standalone process boundary around the byte-unchanged v2 engine and adapter.
+mod boundary;
 mod effects;
+mod migration;
+mod tray;
 
 /// Narrow mapping of the beta host surface used by the adapter onto the SDK.
 pub mod native_core {
@@ -31,7 +28,10 @@ use tezbar_extension_sdk::{BoxFuture, CoreResult, Extension, ExtensionContext};
 
 pub const ID: &str = "com.tezbar.native.convert-px-to-vw-vh";
 
-struct Adapter;
+#[derive(Default)]
+struct Adapter {
+    tray: tokio::sync::Mutex<tray::Tray>,
+}
 impl Extension for Adapter {
     fn id(&self) -> &'static str {
         ID
@@ -51,12 +51,44 @@ impl Extension for Adapter {
         state: &'a mut Value,
     ) -> BoxFuture<'a, CoreResult> {
         Box::pin(async move {
+            let mut tray = self.tray.lock().await;
             let session = payload["sessionId"].as_str().unwrap_or_default();
             effects::before(session, operation, state);
             let result = adapter::handle(ctx, command, operation, payload, state).await;
             effects::after(session, operation, state, result.is_ok());
-            result
+            let result = boundary::adapt(result?, operation, state)?;
+            if command == "menu-bar" && operation == "extension:run-command" {
+                tray.activate(ctx).await?;
+            } else if operation != "extension:dispose-session" {
+                tray.sync(ctx).await?;
+            }
+            Ok(result)
         })
+    }
+    fn initialize<'a>(&'a self, ctx: &'a ExtensionContext) -> BoxFuture<'a, CoreResult> {
+        Box::pin(migration::initialize(ctx))
+    }
+    fn background_activate<'a>(
+        &'a self,
+        ctx: &'a ExtensionContext,
+        params: &'a Value,
+    ) -> BoxFuture<'a, CoreResult> {
+        Box::pin(async move {
+            if params["key"] != "conversion-history" {
+                return Err("Unknown background activation".into());
+            }
+            self.tray.lock().await.activate(ctx).await
+        })
+    }
+    fn background_event<'a>(
+        &'a self,
+        ctx: &'a ExtensionContext,
+        params: &'a Value,
+    ) -> BoxFuture<'a, CoreResult> {
+        Box::pin(async move { self.tray.lock().await.event(ctx, params).await })
+    }
+    fn shutdown<'a>(&'a self, ctx: &'a ExtensionContext) -> BoxFuture<'a, CoreResult> {
+        Box::pin(async move { self.tray.lock().await.shutdown(ctx).await })
     }
 }
 
@@ -67,7 +99,7 @@ fn main() {
         .enable_all()
         .build()
         .expect("extension runtime");
-    let result = runtime.block_on(tezbar_extension_sdk::serve(Adapter));
+    let result = runtime.block_on(tezbar_extension_sdk::serve(Adapter::default()));
     runtime.shutdown_timeout(std::time::Duration::from_millis(500));
     if let Err(error) = result {
         eprintln!("{error}");

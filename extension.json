@@ -89,7 +89,7 @@
     {
       "name": "menu-bar",
       "title": "Conversion History",
-      "description": "History of your last conversions (Rust List adaptation; no menu-bar popup)",
+      "description": "Persistent conversion history tray with a searchable management List",
       "icon": "resources/assets/logo.png",
       "mode": "view",
       "platforms": [
@@ -98,7 +98,7 @@
       ],
       "runtime": "rust",
       "concurrency": "serialize",
-      "gap": "Original menu-bar mode is served as a List view with Copy Value, Remove from History and Clear History actions; no OS menu-bar/status popup, secondary-click deletion or Configure Command entry is provided.",
+      "gap": "Generic tray callbacks have no secondary-click type: explicit Remove items replace secondary-click deletion. Configure Command opens Tezbar Extension Settings; the current API has no command-specific preference target and the original declares no preferences.",
       "refreshMs": 500
     }
   ],
@@ -119,8 +119,18 @@
   "repository": "https://github.com/almatkai/convert-px-to-vw-vh",
   "capabilities": [
     "clipboard.write",
-    "window.visibility"
+    "window.visibility",
+    "tray.set",
+    "tray.remove",
+    "background.retain",
+    "background.release",
+    "settings.open"
   ],
   "artifacts": {},
-  "files": {}
+  "files": {},
+  "migrationPaths": {
+    "jsCacheManaged": "extensions/packages/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json",
+    "jsCacheFlat": "extensions/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json",
+    "jsCacheRegistry": "extension-registry/packages/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json"
+  }
 }

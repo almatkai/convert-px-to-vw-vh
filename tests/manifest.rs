@@ -1,5 +1,5 @@
 //! The schema-3 manifest must mirror the preserved Raycast package exactly,
-//! except for the documented menu-bar List adaptation.
+//! including the tray-backed history management List.
 use serde_json::{json, Value};
 use std::path::Path;
 
@@ -24,7 +24,15 @@ fn manifest_mirrors_original_package_commands_and_identity() {
     assert_eq!(manifest["name"], original["title"]);
     assert_eq!(
         manifest["capabilities"],
-        json!(["clipboard.write", "window.visibility"])
+        json!([
+            "clipboard.write",
+            "window.visibility",
+            "tray.set",
+            "tray.remove",
+            "background.retain",
+            "background.release",
+            "settings.open"
+        ])
     );
     assert_eq!(manifest["preferences"], json!([]));
     assert!(
@@ -42,7 +50,7 @@ fn manifest_mirrors_original_package_commands_and_identity() {
         assert_eq!(p["runtime"], "rust");
         if s["mode"] == "menu-bar" {
             assert_eq!(p["mode"], "view");
-            assert!(p["gap"].as_str().unwrap().contains("no OS menu-bar"));
+            assert!(p["gap"].as_str().unwrap().contains("secondary-click"));
         } else {
             assert_eq!(p["mode"], s["mode"]);
             assert_eq!(p["description"], s["description"]);

@@ -14,9 +14,8 @@ The executable statically links the Tezbar Rust extension SDK
 (https://github.com/almatkai/tezbar-extension-sdk-rust, revision
 aaec571673ab64a85a136cf6bd054ef660c4d93c), Apache-2.0. Its license and NOTICE
 are reproduced in licenses/tezbar-extension-sdk-Apache-2.0.txt and
-licenses/tezbar-extension-sdk-NOTICE.txt. Other statically linked Rust crates
-(serde, serde_json, tokio, uuid, tempfile, time, num-bigint, num-traits,
-ryu-js and their dependencies) are distributed under MIT or Apache-2.0 terms
-as recorded in Cargo.lock.
+licenses/tezbar-extension-sdk-NOTICE.txt. Exact license/notice documents for all locked normal/build dependencies for
+both release targets are listed in licenses/THIRD_PARTY.md and the machine
+inventory licenses/dependency-license-index.json.
 
 Package SPDX expression: MIT AND Apache-2.0.

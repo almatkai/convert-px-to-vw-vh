@@ -32,6 +32,8 @@ def check_sdk():
 
 def build(target, binary, output):
     check_sdk()
+    subprocess.run(["python3", str(ROOT / "scripts/vendor-licenses.py"), "--check"], cwd=ROOT, check=True)
+    subprocess.run(["python3", str(ROOT / "scripts/check-msrv.py")], cwd=ROOT, check=True)
     platform, windows = TARGETS[target]
     manifest = json.loads((ROOT / 'extension.json').read_text())
     slug = manifest['slug']

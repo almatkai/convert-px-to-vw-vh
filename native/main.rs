@@ -56,11 +56,18 @@ impl Extension for Adapter {
             effects::before(session, operation, state);
             let result = adapter::handle(ctx, command, operation, payload, state).await;
             effects::after(session, operation, state, result.is_ok());
-            let result = boundary::adapt(result?, operation, state)?;
+            let mut result = boundary::adapt(result?, operation, state)?;
             if command == "menu-bar" && operation == "extension:run-command" {
                 tray.activate(ctx).await?;
             } else if operation != "extension:dispose-session" {
-                tray.sync(ctx).await?;
+                if let Err(error) = tray.sync(ctx).await {
+                    tray.mark_dirty();
+                    result["trayDiagnostic"] = serde_json::json!(error);
+                    if let Some(message) = result["message"].as_str() {
+                        result["message"] =
+                            serde_json::json!(format!("{message} (History tray refresh pending)"));
+                    }
+                }
             }
             Ok(result)
         })
@@ -85,7 +92,16 @@ impl Extension for Adapter {
         ctx: &'a ExtensionContext,
         params: &'a Value,
     ) -> BoxFuture<'a, CoreResult> {
-        Box::pin(async move { self.tray.lock().await.event(ctx, params).await })
+        Box::pin(async move {
+            let mut tray = self.tray.lock().await;
+            match tray.event(ctx, params).await {
+                Ok(value) => Ok(value),
+                Err(error) => {
+                    tray.mark_dirty();
+                    Ok(serde_json::json!({"ok":true,"diagnostic":error}))
+                }
+            }
+        })
     }
     fn shutdown<'a>(&'a self, ctx: &'a ExtensionContext) -> BoxFuture<'a, CoreResult> {
         Box::pin(async move { self.tray.lock().await.shutdown(ctx).await })

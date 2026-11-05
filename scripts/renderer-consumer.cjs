@@ -27,7 +27,11 @@ for (const value of [input.before,input.response]) {
 }
 let next = input.before;
 const owner = {};
+const feedbackSource = fs.readFileSync(path.join(host, 'src/renderer/extensionFeedback.ts'), 'utf8');
+const feedbackExports = {};
+vm.runInNewContext(ts.transpileModule(feedbackSource, {compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText, {exports:feedbackExports});
 const sandbox = {
+  extensionNotice: feedbackExports.extensionNotice,
   state: input.before, isFormSurface: input.before.root.type === 'Form',
   pendingSubmitRef: {current:null}, currentSession: {current:owner}, sessionOwner:owner,
   setError: value => { if(value) throw Error(value); }, showActionFailure: value => {throw Error(value)},

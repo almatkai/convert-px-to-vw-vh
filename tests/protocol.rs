@@ -100,6 +100,11 @@ impl Peer {
                 "response" if frame["id"] == id.as_str() => {
                     return match frame.get("error") {
                         Some(error) => {
+                            if method == "background.event" {
+                                // Current Process::background_event calls fail on every Err.
+                                self.child.kill().await.unwrap();
+                                panic!("fatal background callback terminated process: {error}");
+                            }
                             assert!(error["code"].is_string() && error["message"].is_string());
                             Err(error.clone())
                         }
@@ -161,8 +166,17 @@ impl Peer {
         &mut self,
         dir: &Path,
         grants: &[&str],
-        paths: Value,
+        mut paths: Value,
     ) -> Result<Value, Value> {
+        for kind in ["Flat", "Managed", "Registry"] {
+            if paths.get(format!("jsCache{kind}")).is_some()
+                && paths.get(format!("jsPackage{kind}")).is_none()
+            {
+                let manifest = dir.join(format!("package-{kind}.json"));
+                std::fs::write(&manifest, b"{}").unwrap();
+                paths[format!("jsPackage{kind}")] = json!(manifest);
+            }
+        }
         let hello = self.frame().await;
         assert_eq!(hello["type"], "hello");
         assert_eq!(hello["id"], ID);
@@ -171,7 +185,7 @@ impl Peer {
         let ready = self
             .try_request(
                 "initialize",
-                json!({"protocol":1,"extensionId":ID,"platform":"macOS",
+                json!({"protocol":1,"extensionId":ID,"platform":if cfg!(windows) {"x86_64-pc-windows-msvc"} else {"aarch64-apple-darwin"},
                     "packageDir":env!("CARGO_MANIFEST_DIR"),"dataDir":dir.join("data"),
                     "tempDir":dir.join("temp"),"grantedCapabilities":grants,
                     "reason":"command","migrationPaths":paths}),
@@ -742,7 +756,7 @@ async fn migration_priority_private_native_data_and_failures() {
         .unwrap();
     assert_eq!(
         read_json(&native_file(dir.path()))["history"][0]["value"],
-        "1.111vw"
+        "1.563vh"
     );
     peer.shutdown().await;
 
@@ -886,7 +900,7 @@ async fn tray_lifecycle_events_mutations_restart_and_failures() {
     assert!(peer
         .try_request("background.event", event(copy.clone()))
         .await
-        .is_err());
+        .is_ok());
     peer.request("background.event", event(copy.clone())).await;
     peer.request("background.event", event(json!("configure")))
         .await;
@@ -901,11 +915,11 @@ async fn tray_lifecycle_events_mutations_restart_and_failures() {
             json!({"resourceId":"other","actionId":copy})
         )
         .await
-        .is_err());
+        .is_ok());
     assert!(peer
         .try_request("background.event", event(json!("invented")))
         .await
-        .is_err());
+        .is_ok());
     peer.request("background.event", event(remove)).await;
     assert!(read_json(&native_file(dir.path()))["history"]
         .as_array()
@@ -914,7 +928,7 @@ async fn tray_lifecycle_events_mutations_restart_and_failures() {
     assert!(
         peer.try_request("background.event", event(copy))
             .await
-            .is_err(),
+            .is_ok(),
         "old revision expires tray IDs"
     );
     peer.open("w2", "width", json!({"width":"1440","pixels":"16"}))
@@ -939,7 +953,7 @@ async fn tray_lifecycle_events_mutations_restart_and_failures() {
     assert!(peer
         .try_request("background.event", event(json!("refresh")))
         .await
-        .is_err());
+        .is_ok());
     assert!(peer
         .try_request("background.activate", json!({"key":"other"}))
         .await
@@ -1036,4 +1050,128 @@ async fn migration_atomic_write_failure_preserves_source_and_retries() {
         "1.111vw"
     );
     peer.shutdown().await;
+}
+
+#[tokio::test]
+async fn completed_conversion_survives_optional_tray_failure() {
+    for command in ["width", "height", "index"] {
+        let dir = tempfile::tempdir().unwrap();
+        let mut peer = Peer::start(&binary(), dir.path()).await;
+        peer.initialize(dir.path(), GRANTS).await;
+        peer.open("tray", "menu-bar", json!({})).await.unwrap();
+        let form = if command == "index" {
+            Some(peer.open("conversion", command, json!({})).await.unwrap())
+        } else {
+            None
+        };
+        peer.calls.clear();
+        peer.replies.extend([
+            Ok(json!({"ok":true})),
+            Ok(Value::Null),
+            Err("tray unavailable".into()),
+        ]);
+        let action = form.as_ref().map(submit);
+        let result = if let Some(id) = &action {
+            peer.act("conversion", json!({"actionId":id,"formValues":{"sizedropdown":"width","dropdown":"1440","textfield":"16"}})).await
+        } else {
+            peer.open("conversion", command, json!({"width":"1440","height":"1024","pixels":"16"})).await
+        }.unwrap();
+        assert_eq!(result["mode"], "no-view");
+        assert!(result["trayDiagnostic"].is_string());
+        assert_eq!(peer.calls[0]["method"], "host.clipboard.write");
+        assert_eq!(peer.calls[1]["method"], "host.window.visibility");
+        assert_eq!(peer.calls[2]["method"], "host.tray.set");
+        let saved = std::fs::read(native_file(dir.path())).unwrap();
+        peer.calls.clear();
+        peer.request(
+            "background.event",
+            json!({"resourceId":"conversion-history","actionId":"refresh"}),
+        )
+        .await;
+        assert!(peer.calls.iter().all(|c| c["method"] == "host.tray.set"));
+        assert!(peer.calls[0]["params"]["items"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|i| i["id"] == "diagnostic"));
+        if let Some(id) = action {
+            assert!(peer
+                .act("conversion", json!({"actionId":id,"formValues":{}}))
+                .await
+                .is_err());
+        }
+        peer.dispose("conversion").await;
+        assert_eq!(std::fs::read(native_file(dir.path())).unwrap(), saved);
+        peer.shutdown().await;
+    }
+}
+
+#[tokio::test]
+async fn exact_grants_select_first_valid_package_owner() {
+    let manifest: Value = serde_json::from_str(include_str!("../extension.json")).unwrap();
+    for scenario in [
+        "all",
+        "invalid-flat",
+        "absent-flat",
+        "flat-no-cache",
+        "native-owned",
+    ] {
+        let dir = tempfile::tempdir().unwrap();
+        let mut paths = json!({});
+        for kind in ["Flat", "Managed", "Registry"] {
+            let package_key = format!("jsPackage{kind}");
+            let cache_key = format!("jsCache{kind}");
+            let package = dir
+                .path()
+                .join(manifest["migrationPaths"][&package_key].as_str().unwrap());
+            let cache = dir
+                .path()
+                .join(manifest["migrationPaths"][&cache_key].as_str().unwrap());
+            std::fs::create_dir_all(cache.parent().unwrap()).unwrap();
+            if !(scenario == "absent-flat" && kind == "Flat") {
+                std::fs::write(
+                    &package,
+                    if scenario == "invalid-flat" && kind == "Flat" {
+                        "[]"
+                    } else {
+                        include_str!("../package.json")
+                    },
+                )
+                .unwrap();
+            }
+            paths[&package_key] = json!(package);
+            if !(scenario == "flat-no-cache" && kind == "Flat") {
+                cache_file(
+                    cache.parent().unwrap(),
+                    "shared.json",
+                    json!([legacy_item(match kind {
+                        "Flat" => "2.222vw",
+                        "Managed" => "1.111vw",
+                        _ => "3.333vw",
+                    })]),
+                );
+                paths[&cache_key] = json!(cache);
+            }
+        }
+        if scenario == "native-owned" {
+            std::fs::create_dir_all(native_file(dir.path()).parent().unwrap()).unwrap();
+            std::fs::write(
+                native_file(dir.path()),
+                br#"{"tezbarJsCacheMigration":1,"historyRevision":4,"history":[]}"#,
+            )
+            .unwrap();
+        }
+        let mut peer = Peer::start(&binary(), dir.path()).await;
+        peer.initialize_paths(dir.path(), GRANTS, paths)
+            .await
+            .unwrap();
+        let data = read_json(&native_file(dir.path()));
+        match scenario {
+            "all" => assert_eq!(data["history"][0]["value"], "2.222vw"),
+            "invalid-flat" | "absent-flat" => assert_eq!(data["history"][0]["value"], "1.111vw"),
+            "flat-no-cache" => assert!(data.get("history").is_none()),
+            _ => assert_eq!(data["historyRevision"], 4),
+        }
+        peer.shutdown().await;
+    }
 }

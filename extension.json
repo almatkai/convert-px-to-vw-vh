@@ -131,6 +131,9 @@
   "migrationPaths": {
     "jsCacheManaged": "extensions/packages/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json",
     "jsCacheFlat": "extensions/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json",
-    "jsCacheRegistry": "extension-registry/packages/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json"
+    "jsCacheRegistry": "extension-registry/packages/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json",
+    "jsPackageFlat": "extensions/raycast.convert-px-to-vw-vh/package.json",
+    "jsPackageManaged": "extensions/packages/raycast.convert-px-to-vw-vh/package.json",
+    "jsPackageRegistry": "extension-registry/packages/raycast.convert-px-to-vw-vh/package.json"
   }
 }

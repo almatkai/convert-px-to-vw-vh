@@ -101,16 +101,22 @@ Explicit Remove items replace secondary-click deletion: the host callback has
 no click-type field. Configure Command opens Tezbar Extension Settings, because
 there is no command-specific preference target (the original declares none).
 Tray Copy writes the clipboard without hiding or stealing focus. Callback
-errors propagate as protocol errors; the current host logs/ignores the callback
-result instead of displaying its confirmation. Actual desktop behavior still
+errors return successful diagnostic envelopes, because the current host terminates
+the process on every background error. Invalid or obsolete IDs execute no action.
+Failed tray refreshes preserve completed conversion state and mark the snapshot
+dirty. A later operation or Refresh retries once; the recovered tray displays a
+tray-specific notice. If tray publication remains unavailable, that notice cannot
+be displayed until recovery. Actual desktop behavior still
 needs QA. Refresh History provides an explicit retry of the tray snapshot.
 
 Before commands become available, `native/migration.rs` imports the original
 Tezbar JavaScript Cache's JSON-string `history` into an empty native store.
-Only the three explicit `migrationPaths` are read: `extensions/packages/`,
-`extensions/`, then `extension-registry/packages/`, each under this extension's
+Only six explicit cache/package manifest file grants are read: `extensions/`,
+`extensions/packages/`, then `extension-registry/packages/`, each under this extension's
 `raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json`. That priority
-matches managed package discovery; caches are never merged. Entries retain
+matches current host discovery: the first parseable object package.json owns
+the cache, even when that cache is absent. Orphan caches and invalid manifests
+cannot win; caches are never merged. Entries retain
 ordering, timestamps and duplicate values, with stable descending IDs and the
 original ten-item limit. Validation covers the complete input. Source files
 are never modified; an atomic migration marker prevents reimport after clear.
@@ -164,3 +170,8 @@ QA on either platform, and release publication. Both manifest `verification`
 entries are `not-run`.
 
 [Tezbar Native V2 Rust implementation](v2/README.md)
+
+Older migration markers remain authoritative. Without an import provenance snapshot,
+an incorrectly imported old history cannot safely be distinguished from subsequent
+user edits or intentional clear. Automatic repair never overwrites it; recovery
+requires user-reviewed export/merge outside this migration.

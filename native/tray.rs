@@ -8,10 +8,16 @@ const RESOURCE: &str = "conversion-history";
 #[derive(Default)]
 pub struct Tray {
     active: bool,
+    diagnostic: bool,
     revision: Option<u64>,
     issued: Vec<String>,
 }
 impl Tray {
+    pub fn mark_dirty(&mut self) {
+        self.revision = None;
+        self.diagnostic = true;
+    }
+
     async fn publish(&mut self, ctx: &ExtensionContext, force: bool) -> CoreResult {
         let history = History::read(&read_store(ctx, STORE).await?)?;
         if !force && self.revision == Some(history.revision) {
@@ -32,11 +38,15 @@ impl Tray {
         }
         items.push(json!({"id":"refresh","title":"Refresh History"}));
         items.push(json!({"id":"stop","title":"Stop Conversion History"}));
+        if self.diagnostic {
+            items.push(json!({"id":"diagnostic","title":"History tray refresh recovered; conversion was preserved","enabled":false}));
+        }
         let issued = items
             .iter()
             .map(|i| i["id"].as_str().unwrap().to_owned())
             .collect();
         ctx.host("host.tray.set", json!({"resourceId":RESOURCE,"icon":"resources/assets/logo.png","tooltip":"Conversion History","items":items})).await?;
+        self.diagnostic = false;
         self.issued = issued;
         self.active = true;
         self.revision = Some(history.revision);

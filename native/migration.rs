@@ -5,7 +5,7 @@ use tezbar_extension_sdk::{read_store, update_store, CoreResult, ExtensionContex
 
 const STORE: &str = "convert-px-to-vw-vh";
 const MARKER: &str = "tezbarJsCacheMigration";
-pub const KEYS: &[&str] = &["jsCacheManaged", "jsCacheFlat", "jsCacheRegistry"];
+pub const KEYS: &[&str] = &["jsCacheFlat", "jsCacheManaged", "jsCacheRegistry"];
 
 pub async fn initialize(ctx: &ExtensionContext) -> CoreResult {
     let saved = read_store(ctx, STORE).await?;
@@ -17,8 +17,23 @@ pub async fn initialize(ctx: &ExtensionContext) -> CoreResult {
     }
     let mut imported = None;
     for key in KEYS {
-        let Some(path) = ctx.migration_paths.get(*key).cloned() else {
+        let manifest_key = key.replace("jsCache", "jsPackage");
+        let Some(manifest_path) = ctx.migration_paths.get(&manifest_key).cloned() else {
             continue;
+        };
+        // Match registry::collect: parseable JSON object, first identity wins.
+        let manifest = tokio::task::spawn_blocking(move || std::fs::read(manifest_path))
+            .await
+            .map_err(|e| e.to_string())?;
+        if !manifest
+            .ok()
+            .and_then(|b| serde_json::from_slice::<Value>(&b).ok())
+            .is_some_and(|v| v.is_object())
+        {
+            continue;
+        }
+        let Some(path) = ctx.migration_paths.get(*key).cloned() else {
+            break; // Selected owner has no cache; never import an inactive copy.
         };
         let bytes = tokio::task::spawn_blocking(move || std::fs::read(path))
             .await
@@ -28,7 +43,7 @@ pub async fn initialize(ctx: &ExtensionContext) -> CoreResult {
             serde_json::from_slice(&bytes).map_err(|e| format!("Invalid legacy Cache: {e}"))?;
         let cache = cache.as_object().ok_or("Legacy Cache must be an object")?;
         let Some(history) = cache.get("history") else {
-            continue;
+            break;
         };
         let items: Value = serde_json::from_str(
             history
@@ -50,7 +65,7 @@ pub async fn initialize(ctx: &ExtensionContext) -> CoreResult {
         let candidate = json!({"historyRevision":items.len(),"history":entries});
         History::read(&candidate)?;
         imported = Some(candidate);
-        break; // deterministic managed, flat, registry priority; never merge caches
+        break; // host flat, managed, registry priority; never merge caches
     }
     // Marker and imported data commit together. A failed write can safely retry.
     update_store(ctx, STORE, move |value| {

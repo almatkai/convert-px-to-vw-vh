@@ -175,3 +175,5 @@ Older migration markers remain authoritative. Without an import provenance snaps
 an incorrectly imported old history cannot safely be distinguished from subsequent
 user edits or intentional clear. Automatic repair never overwrites it; recovery
 requires user-reviewed export/merge outside this migration.
+
+The accepted renderer compatibility baseline is `d77f03b12a93d72cd2a56a73faa1a04fae94a2cd`. Run `TEZBAR_HOST_SOURCE=/absolute/frozen-host-source cargo test -j2 --locked` and use the same environment for `scripts/smoke-package.py … --protocol-tests`; its source fixture must contain that revision and a TypeScript compiler. The helper extracts the callback and its real notice helpers from the selected source, and only loads `extensionFeedback.ts` when that callback uses it. Testing a mutable sibling checkout alone is not baseline evidence. Candidate host `9cac530f0cb3012eedb6bea410817764dffe914b` is an additional compatibility target, pending its own review.

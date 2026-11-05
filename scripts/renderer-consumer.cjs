@@ -27,16 +27,28 @@ for (const value of [input.before,input.response]) {
 }
 let next = input.before;
 const owner = {};
-const feedbackSource = fs.readFileSync(path.join(host, 'src/renderer/extensionFeedback.ts'), 'utf8');
-const feedbackExports = {};
-vm.runInNewContext(ts.transpileModule(feedbackSource, {compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText, {exports:feedbackExports});
+const helpers = {};
+if (/\bextensionNotice\b/.test(callback)) {
+  const feedbackSource = fs.readFileSync(path.join(host, 'src/renderer/extensionFeedback.ts'), 'utf8');
+  const feedbackExports = {};
+  vm.runInNewContext(ts.transpileModule(feedbackSource, {compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText, {exports:feedbackExports});
+  assert.equal(typeof feedbackExports.extensionNotice, 'function');
+  helpers.extensionNotice = feedbackExports.extensionNotice;
+} else {
+  // The accepted d77f03b callback uses its own pure notice helpers and has no
+  // extensionFeedback module. Execute the actual helpers from that same source.
+  const names = ['effectNotice', 'fallbackActionNotice'].filter(name => new RegExp(`\\b${name}\\b`).test(callback));
+  const functions = tree.statements.filter(node => ts.isFunctionDeclaration(node) && names.includes(node.name?.text)).map(node => node.getText(tree));
+  assert.equal(functions.length, names.length, 'baseline callback helpers must exist');
+  const program = functions.join('\n') + `\n({${names.join(',')}});`;
+  Object.assign(helpers, vm.runInNewContext(ts.transpileModule(program, {compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText, {}));
+}
 const sandbox = {
-  extensionNotice: feedbackExports.extensionNotice,
+  ...helpers,
   state: input.before, isFormSurface: input.before.root.type === 'Form',
   pendingSubmitRef: {current:null}, currentSession: {current:owner}, sessionOwner:owner,
   setError: value => { if(value) throw Error(value); }, showActionFailure: value => {throw Error(value)},
   showActionNotice: () => null, setActionNotice: () => {},
-  effectNotice: () => null, fallbackActionNotice: () => null,
   setState: value => { next = typeof value === 'function' ? value(next) : value; },
   window: {tezbar:{extensionInvokeAction:async () => input.response}},
 };

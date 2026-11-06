@@ -1,5 +1,15 @@
 # Raycast Extension: Pixels to Viewport Width or Height
 
+**Native Rust 0.2.0 for Tezbar:** [release](https://github.com/almatkai/convert-px-to-vw-vh/releases/tag/v0.2.0), [macOS Apple Silicon ZIP](https://github.com/almatkai/convert-px-to-vw-vh/releases/download/v0.2.0/convert-px-to-vw-vh-aarch64-apple-darwin.zip), [Windows x64 ZIP](https://github.com/almatkai/convert-px-to-vw-vh/releases/download/v0.2.0/convert-px-to-vw-vh-x86_64-pc-windows-msvc.zip), [trusted install reference](https://github.com/almatkai/convert-px-to-vw-vh/releases/download/v0.2.0/extension-release.json).
+
+Requires a Tezbar build with schema-3 process extensions and the import CLI. Download the trusted JSON and your platform ZIP, then import:
+
+```sh
+tezbar --extensions-v3-import extension-release.json convert-px-to-vw-vh-<target>.zip
+```
+
+Both native platform builds, extracted-package protocol checks and actual Tezbar CLI installs into isolated profiles passed. [Validation and exact hashes](https://github.com/almatkai/convert-px-to-vw-vh/releases/download/v0.2.0/validation.json) record the tested source. Actual desktop effects remain unverified; Store discovery still needs a Tezbar catalog update.
+
 ![Extension Logo](assets/logo.png)
 
 A Raycast extension that converts pixel values to viewport units (vw/vh) based on the chosen viewport size.
@@ -154,7 +164,7 @@ Exact original dependency notices for both release targets are recorded in
 and all supplied alternative notices; packaging checks it before writing a ZIP.
 `check-msrv.py` checks both target closures' declared requirements against 1.85;
 the native `cargo +1.85.0 check` also compiles the locked dependency graph.
-Full Windows compilation and smoke remain a separate central check.
+Native Windows compilation, extracted-package smoke and isolated CLI import passed for the published source.
 
 `package.py` writes `dist/<slug>-<target>.zip` with `extension.json`, `bin/`,
 `resources/`, `licenses/`, `LICENSE` and `NOTICE`. It also writes these sidecars:
@@ -165,9 +175,9 @@ offline, and with `--protocol-tests` runs `tests/protocol.rs` against that binar
 The test host answers reverse requests with recorded stubs, so the real
 clipboard and windows are never touched.
 
-Not yet done: a Windows (`x86_64-pc-windows-msvc`) build and test, real desktop
-QA on either platform, and release publication. Both manifest `verification`
-entries are `not-run`.
+Both platform packages are published after independent review, native tests/builds,
+extracted protocol checks and isolated CLI imports. Real clipboard/window/tray
+desktop QA remains unverified; both manifest `verification` entries stay `not-run`.
 
 [Tezbar Native V2 Rust implementation](v2/README.md)
 

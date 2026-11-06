@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 3,
+  "id": "com.tezbar.native.convert-px-to-vw-vh",
+  "slug": "convert-px-to-vw-vh",
+  "name": "Pixels to Viewport Width or Height",
+  "version": "0.2.0",
+  "description": "Fast conversion of pixels to vw or vh depending on the size of your viewport. Original Raycast extension by Atiipik (MIT); standalone Rust Tezbar process extension.",
+  "author": "Atiipik",
+  "icon": "resources/assets/logo.png",
+  "runtime": "rust",
+  "replaces": [
+    "raycast.convert-px-to-vw-vh"
+  ],
+  "platforms": [
+    "macOS",
+    "Windows"
+  ],
+  "preferences": [],
+  "commands": [
+    {
+      "name": "index",
+      "title": "Convert PX to VW or VH",
+      "description": "All commands in one place for easy convertion",
+      "mode": "view",
+      "platforms": [
+        "macOS",
+        "Windows"
+      ],
+      "runtime": "rust",
+      "concurrency": "serialize",
+      "refreshMs": null
+    },
+    {
+      "name": "height",
+      "title": "Pixels Viewport Height",
+      "description": "Pixels to viewport height",
+      "icon": "resources/assets/logo-vh.png",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "height",
+          "placeholder": "height",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "pixels",
+          "placeholder": "pixels",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "platforms": [
+        "macOS",
+        "Windows"
+      ],
+      "runtime": "rust",
+      "concurrency": "serialize",
+      "refreshMs": null
+    },
+    {
+      "name": "width",
+      "title": "Pixels Viewport Width",
+      "description": "Pixels to viewport width",
+      "icon": "resources/assets/logo-vw.png",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "width",
+          "placeholder": "width",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "pixels",
+          "placeholder": "pixels",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "platforms": [
+        "macOS",
+        "Windows"
+      ],
+      "runtime": "rust",
+      "concurrency": "serialize",
+      "refreshMs": null
+    },
+    {
+      "name": "menu-bar",
+      "title": "Conversion History",
+      "description": "Persistent conversion history tray with a searchable management List",
+      "icon": "resources/assets/logo.png",
+      "mode": "view",
+      "platforms": [
+        "macOS",
+        "Windows"
+      ],
+      "runtime": "rust",
+      "concurrency": "serialize",
+      "gap": "Generic tray callbacks have no secondary-click type: explicit Remove items replace secondary-click deletion. Configure Command opens Tezbar Extension Settings; the current API has no command-specific preference target and the original declares no preferences.",
+      "refreshMs": 500
+    }
+  ],
+  "verification": [
+    {
+      "platform": "macOS",
+      "state": "not-run",
+      "note": "Real-pipe protocol tests and offline ZIP smoke only; desktop clipboard/window/launcher QA has not run."
+    },
+    {
+      "platform": "Windows",
+      "state": "not-run",
+      "note": "No Windows build or test has run."
+    }
+  ],
+  "execution": "process",
+  "protocolVersion": 1,
+  "repository": "https://github.com/almatkai/convert-px-to-vw-vh",
+  "capabilities": [
+    "clipboard.write",
+    "window.visibility",
+    "tray.set",
+    "tray.remove",
+    "background.retain",
+    "background.release",
+    "settings.open"
+  ],
+  "artifacts": {},
+  "files": {},
+  "migrationPaths": {
+    "jsCacheManaged": "extensions/packages/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json",
+    "jsCacheFlat": "extensions/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json",
+    "jsCacheRegistry": "extension-registry/packages/raycast.convert-px-to-vw-vh/.tezbar-support/cache/shared.json",
+    "jsPackageFlat": "extensions/raycast.convert-px-to-vw-vh/package.json",
+    "jsPackageManaged": "extensions/packages/raycast.convert-px-to-vw-vh/package.json",
+    "jsPackageRegistry": "extension-registry/packages/raycast.convert-px-to-vw-vh/package.json"
+  }
+}

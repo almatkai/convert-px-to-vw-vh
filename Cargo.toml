@@ -1,0 +1,27 @@
+[package]
+name = "tezbar-convert-px-to-vw-vh-process"
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.85"
+license = "MIT AND Apache-2.0"
+description = "Standalone Rust process extension: pixels to viewport width/height for Tezbar"
+repository = "https://github.com/almatkai/convert-px-to-vw-vh"
+publish = false
+
+[[bin]]
+name = "tezbar-convert-px-to-vw-vh"
+path = "native/main.rs"
+
+[dependencies]
+tezbar-convert-px-to-vw-vh = { path = "v2" }
+tezbar-extension-sdk = { git = "https://github.com/almatkai/tezbar-extension-sdk-rust.git", rev = "aaec571673ab64a85a136cf6bd054ef660c4d93c" }
+serde_json = "=1.0.145"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "io-util", "io-std", "sync", "time"] }
+
+[dev-dependencies]
+tempfile = "=3.15.0"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "io-util", "process", "time"] }
+
+[profile.release]
+codegen-units = 4
+strip = true
